@@ -84,12 +84,40 @@ async function updateadminFollowCount(client, adminId,followerCount) {
           })
   })
 }
+/**mp */
+async function getAllUser(client){
+  return new Promise(function(resolve,reject){
+    return client.query(`SELECT * from users`, function (error, result, fields) {
+      if (error) {
+        reject(error);
+        return;
+      }
+      resolve(result);
+    });
+  })
+}
+async function updateUserInfo(client,userDetails){
 
+  return new Promise(function (resolve, reject) {
+    client.query(`UPDATE users SET imageUrl = "${userDetails.imageUrl}", name = "${userDetails.name}", password = "${userDetails.password}", userType = "${userDetails.userType}", username = "${userDetails.username}" WHERE id = ${userDetails.id}`,
+        function (error, result) {
+          if (error) {
+            console.log("Error is", error)
+            reject(error);
+            return;
+          }
+          resolve(result);
+    })
+  })
+}
 module.exports = {
   updateProfileByID: updateProfileByID,
   getProfileByID: getProfileByID,
   followAdmin: followAdmin,
   updateadminFollowCount:updateadminFollowCount,
   getFollowedAdminsByID: getFollowedAdminsByID,
-  searchQuery: searchQuery
+  searchQuery: searchQuery,
+
+  getAllUser:getAllUser,
+  updateUserInfo:updateUserInfo
 };

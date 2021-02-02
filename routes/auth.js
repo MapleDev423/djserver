@@ -411,7 +411,58 @@ router.post("/login", async (req, res) => {
     });
   }
 });
+/**mp */
+router.post("/loginasadmin", async (req, res) => {
+  try {
+    const users = await Auth.adminLogin(
+      DB.connection,
+      req.body.email,
+      req.body.role
+    );
+    if (users.length === 0) {
+      return res.status(400).send({
+        msg: "Couldn't find your email or username",
+        success: false,
+      });
+    }
 
+    if (users[0].active == 0) {
+      return res.status(400).send({
+        msg: "Your email not verify",
+        success: false,
+      });
+    }
+    bcrypt.compare(req.body.password, users[0].password, function (
+      err,
+      response
+    ) {
+      if (response) {
+        res.status(200).send({
+          token: jwt.sign(
+            {
+              id: users[0].id,
+              email: users[0].email,
+              role: users[0].userType,
+            },
+            config.jwt.secret
+          ),
+        });
+      } else {
+        res.status(400).send({
+          msg:
+            "Wrong password. Try again or click Forgot password to reset it.",
+          success: false,
+        });
+      }
+    });
+  } catch (e) {
+    res.status(500).send({
+      msg: "Internal Server Error",
+      success: false,
+    });
+  }
+});
+/** */
 //
 // Login Admin
 
