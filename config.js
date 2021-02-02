@@ -2,8 +2,8 @@ const config = {
   database: {
     host: "127.0.0.1",
     user: "root",
-//    password: "djapppassword",
-    password: "",
+    password: "djapppassword",
+//    password: "",
 
     database: "djapp",
   },
